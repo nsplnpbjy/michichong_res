@@ -1,4 +1,4 @@
-package main
+package internal
 
 import (
 	"context"
@@ -18,7 +18,7 @@ var (
 )
 
 // 1.建立连接
-func DbInit() {
+func DbInit() *mongo.Collection {
 	defer func() {
 		if dbErr := recover(); dbErr != nil {
 			fmt.Println(dbErr)
@@ -32,4 +32,13 @@ func DbInit() {
 
 	//3.选择表 my_collection
 	collection = db.Collection("res")
+	return collection
+}
+
+func GetCollection() *mongo.Collection {
+	return collection
+}
+
+func GetError() error {
+	return err
 }

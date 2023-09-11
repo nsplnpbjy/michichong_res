@@ -1,4 +1,4 @@
-module main
+module github.com/nsplnp/michichong
 
 go 1.21.1
 

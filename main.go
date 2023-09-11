@@ -4,13 +4,15 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
+	"github.com/nsplnp/michichong/internal"
 )
 
 func main() {
 
 	r := gin.Default()
 
-	DbInit()
+	internal.DbInit()
 
 	//测试使用
 	r.GET("/ping", func(c *gin.Context) {
