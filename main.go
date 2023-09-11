@@ -59,5 +59,18 @@ func main() {
 		}
 
 	})
+
+	//参观完毕
+	r.POST("/done", func(c *gin.Context) {
+		if Done(c) {
+			c.JSON(http.StatusOK, gin.H{
+				"msg": "成功",
+			})
+		} else {
+			c.JSON(http.StatusOK, gin.H{
+				"msg": "失败",
+			})
+		}
+	})
 	r.Run(":8092") // 监听并在 0.0.0.0:8080 上启动服务
 }

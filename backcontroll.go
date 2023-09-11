@@ -15,16 +15,18 @@ type Res struct {
 	ComuName        string `bson:"comuname"`
 	ComuPhoneNumber string `bson:"comuphonenumber"`
 	ResTime         string `bson:"restime"`
+	IsDone          bool   `bson:"isdone"`
 }
 
+// 返回全部预约
 func DoGetRes(c *gin.Context) {
 	ress := []*Res{}
-	temp := Res{}
 	results, findErr := collection.Find(context.Background(), bson.M{})
 	if findErr != nil {
 		return
 	}
 	for results.Next(context.TODO()) {
+		temp := Res{}
 		decodeErr := results.Decode(&temp)
 		if decodeErr != nil {
 			continue
@@ -38,6 +40,7 @@ func DoGetRes(c *gin.Context) {
 
 }
 
+// 根据团体名返回模糊查询预约
 func DoGetSpeRes(c *gin.Context) {
 	var data Res
 	if err := c.ShouldBind(&data); err != nil {
@@ -45,13 +48,13 @@ func DoGetSpeRes(c *gin.Context) {
 		return
 	}
 	ress := []*Res{}
-	temp := Res{}
 	results, findErr := collection.Find(context.Background(), bson.M{"groupname": bson.M{"$regex": data.GroupName}})
 	if findErr != nil {
 		c.Error(findErr)
 		return
 	}
 	for results.Next(context.TODO()) {
+		temp := Res{}
 		if decodeErr := results.Decode(&temp); decodeErr != nil {
 			c.Error(decodeErr)
 			continue
@@ -64,6 +67,7 @@ func DoGetSpeRes(c *gin.Context) {
 	results.Close(context.TODO())
 }
 
+// 插入
 func DoInsertRes(c *gin.Context) bool {
 	if !NilCheck(c) {
 		c.Error(err)
@@ -76,7 +80,7 @@ func DoInsertRes(c *gin.Context) bool {
 	if results.Next(context.TODO()) {
 		return false
 	}
-	res := Res{c.PostForm("TourTime"), c.PostForm("GroupName"), c.PostForm("ComuName"), c.PostForm("ComuPhoneNumber"), c.PostForm("ResTime")}
+	res := Res{c.PostForm("TourTime"), c.PostForm("GroupName"), c.PostForm("ComuName"), c.PostForm("ComuPhoneNumber"), c.PostForm("ResTime"), false}
 	if _, err = collection.InsertOne(context.TODO(), res); err != nil {
 		log.Println("插入失败:", err)
 		return false
@@ -85,6 +89,17 @@ func DoInsertRes(c *gin.Context) bool {
 	return true
 }
 
+// 确认已参观
+func Done(c *gin.Context) bool {
+	if !NilCheck(c) {
+		return false
+	} else {
+		_, modierr := collection.UpdateOne(context.TODO(), bson.M{"tourtime": bson.M{"$eq": c.PostForm("TourTime")}}, bson.M{"$set": bson.M{"isdone": true}})
+		return modierr == nil
+	}
+}
+
+// 删除预约
 func DoDeleteRes(c *gin.Context) bool {
 	if c.PostForm("TourTime") == "200000000000" {
 		_, delerr := collection.DeleteMany(context.TODO(), bson.M{})
