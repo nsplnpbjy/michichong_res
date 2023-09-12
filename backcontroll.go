@@ -89,7 +89,7 @@ func DoInsertRes(c *gin.Context) bool {
 	}
 	collection := dboption.GetCollection()
 	err := dboption.GetError()
-	if !NilCheck(c) {
+	if !NilCheck(data) {
 		c.Error(err)
 	}
 	results, findErr := collection.Find(context.Background(), bson.M{"tourtime": bson.M{"$regex": data.TourTime}})
@@ -120,7 +120,7 @@ func Done(c *gin.Context) bool {
 		return false
 	}
 	collection := dboption.GetCollection()
-	if !NilCheck(c) {
+	if !NilCheck(data) {
 		return false
 	} else {
 		results, seleErr := collection.Find(context.TODO(), bson.M{"tourtime": bson.M{"$eq": data.TourTime}})
@@ -178,24 +178,24 @@ func DoDeleteRes(c *gin.Context) bool {
 	return true
 }
 
-func NilCheck(c *gin.Context) bool {
-	tourTime := c.PostForm("TourTime")
+func NilCheck(data Res) bool {
+	tourTime := data.TourTime
 	if tourTime == "" {
 		return false
 	}
-	groupName := c.PostForm("GroupName")
+	groupName := data.GroupName
 	if groupName == "" {
 		return false
 	}
-	comuName := c.PostForm("ComuName")
+	comuName := data.ComuName
 	if comuName == "" {
 		return false
 	}
-	comuPhoneNumber := c.PostForm("ComuPhoneNumber")
+	comuPhoneNumber := data.ComuPhoneNumber
 	if comuPhoneNumber == "" {
 		return false
 	}
-	resTime := c.PostForm("ResTime")
+	resTime := data.ResTime
 	if resTime == "" {
 		return false
 	}
