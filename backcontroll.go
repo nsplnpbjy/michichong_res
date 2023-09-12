@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/nsplnp/michichong/internal"
+	"github.com/nsplnp/michichong/dboption"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -22,7 +22,7 @@ type Res struct {
 // 返回全部预约
 func DoGetRes(c *gin.Context) {
 	selectCount := 0
-	collection := internal.GetCollection()
+	collection := dboption.GetCollection()
 	ress := []*Res{}
 	results, findErr := collection.Find(context.Background(), bson.M{})
 	defer results.Close(context.TODO())
@@ -47,7 +47,7 @@ func DoGetRes(c *gin.Context) {
 
 // 根据团体名返回模糊查询预约
 func DoGetSpeRes(c *gin.Context) {
-	collection := internal.GetCollection()
+	collection := dboption.GetCollection()
 	var data Res
 	if err := c.ShouldBind(&data); err != nil {
 		c.Error(err)
@@ -77,8 +77,8 @@ func DoGetSpeRes(c *gin.Context) {
 
 // 插入
 func DoInsertRes(c *gin.Context) bool {
-	collection := internal.GetCollection()
-	err := internal.GetError()
+	collection := dboption.GetCollection()
+	err := dboption.GetError()
 	if !NilCheck(c) {
 		c.Error(err)
 	}
@@ -104,7 +104,7 @@ func DoInsertRes(c *gin.Context) bool {
 
 // 确认已参观
 func Done(c *gin.Context) bool {
-	collection := internal.GetCollection()
+	collection := dboption.GetCollection()
 	if !NilCheck(c) {
 		return false
 	} else {
@@ -140,7 +140,7 @@ func Done(c *gin.Context) bool {
 
 // 删除预约
 func DoDeleteRes(c *gin.Context) bool {
-	collection := internal.GetCollection()
+	collection := dboption.GetCollection()
 	if c.PostForm("TourTime") == "200000000000" {
 		_, delerr := collection.DeleteMany(context.TODO(), bson.M{})
 		if delerr != nil {

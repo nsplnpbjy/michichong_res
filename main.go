@@ -6,21 +6,22 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/nsplnp/michichong/internal"
+	"github.com/nsplnp/michichong/dboption"
+	"github.com/nsplnp/michichong/logutil"
 )
 
 func main() {
 
 	//使用log
-	internal.LogInit()
+	logutil.LogInit()
 	defer func() {
-		if !internal.CloseLog() {
+		if err := logutil.CloseLog(); err != nil {
 			log.Println("日志关闭失败")
 		}
 	}()
 
 	//使用数据库
-	internal.DbInit()
+	dboption.DbInit()
 
 	r := gin.Default()
 	//测试使用
