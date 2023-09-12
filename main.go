@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,14 +11,22 @@ import (
 
 func main() {
 
-	r := gin.Default()
+	//使用log
+	internal.LogInit()
+	defer func() {
+		if !internal.CloseLog() {
+			log.Println("日志关闭失败")
+		}
+	}()
 
+	//使用数据库
 	internal.DbInit()
 
+	r := gin.Default()
 	//测试使用
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"message": "pong",
+			"msg": "pong",
 		})
 	})
 
