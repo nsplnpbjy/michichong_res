@@ -21,6 +21,11 @@ type Res struct {
 
 // 返回全部预约
 func DoGetRes(c *gin.Context) {
+	data := Res{}
+	if err := c.ShouldBind(&data); err != nil {
+		c.Error(err)
+		return
+	}
 	selectCount := 0
 	collection := dboption.GetCollection()
 	ress := []*Res{}
@@ -77,24 +82,29 @@ func DoGetSpeRes(c *gin.Context) {
 
 // 插入
 func DoInsertRes(c *gin.Context) bool {
+	data := Res{}
+	if err := c.ShouldBind(&data); err != nil {
+		c.Error(err)
+		return false
+	}
 	collection := dboption.GetCollection()
 	err := dboption.GetError()
 	if !NilCheck(c) {
 		c.Error(err)
 	}
-	results, findErr := collection.Find(context.Background(), bson.M{"tourtime": bson.M{"$regex": c.PostForm("TourTime")}})
+	results, findErr := collection.Find(context.Background(), bson.M{"tourtime": bson.M{"$regex": data.TourTime}})
 	if findErr != nil {
-		log.Println("插入失败:" + c.PostForm("GroupName"))
+		log.Println("插入失败:" + data.GroupName)
 		c.Error(findErr)
 		return false
 	}
 	if results.Next(context.TODO()) {
-		log.Println("插入失败:" + c.PostForm("GroupName") + "  时间已被预约")
+		log.Println("插入失败:" + data.GroupName + "  时间已被预约")
 		return false
 	}
-	res := Res{c.PostForm("TourTime"), c.PostForm("GroupName"), c.PostForm("ComuName"), c.PostForm("ComuPhoneNumber"), c.PostForm("ResTime"), false}
+	res := Res{data.TourTime, data.GroupName, data.ComuName, data.ComuPhoneNumber, data.ResTime, false}
 	if _, err = collection.InsertOne(context.TODO(), res); err != nil {
-		log.Println("插入失败:" + c.PostForm("GroupName"))
+		log.Println("插入失败:" + res.GroupName)
 		return false
 	}
 	results.Close(context.TODO())
@@ -104,35 +114,40 @@ func DoInsertRes(c *gin.Context) bool {
 
 // 确认已参观
 func Done(c *gin.Context) bool {
+	data := Res{}
+	if err := c.ShouldBind(&data); err != nil {
+		c.Error(err)
+		return false
+	}
 	collection := dboption.GetCollection()
 	if !NilCheck(c) {
 		return false
 	} else {
-		results, seleErr := collection.Find(context.TODO(), bson.M{"tourtime": bson.M{"$eq": c.PostForm("TourTime")}})
+		results, seleErr := collection.Find(context.TODO(), bson.M{"tourtime": bson.M{"$eq": data.TourTime}})
 		if seleErr != nil {
-			log.Println("确认参观失败:" + c.PostForm("TourTime"))
+			log.Println("确认参观失败:" + data.TourTime)
 			return false
 		}
 		if !results.Next(context.TODO()) {
-			log.Println("没有预约记录：" + c.PostForm("TourTime"))
+			log.Println("没有预约记录：" + data.TourTime)
 			return false
 		} else {
 			temp := Res{}
 			if decErr := results.Decode(&temp); decErr != nil {
-				log.Println("预约记录解码失败：" + c.PostForm("TourTime"))
+				log.Println("预约记录解码失败：" + data.TourTime)
 				return false
 			}
 			if temp.IsDone {
-				log.Println("确认参观失败，参观已经完成：" + c.PostForm("TourTime"))
+				log.Println("确认参观失败，参观已经完成：" + data.TourTime)
 				return false
 			}
 		}
-		_, modierr := collection.UpdateOne(context.TODO(), bson.M{"tourtime": bson.M{"$eq": c.PostForm("TourTime")}}, bson.M{"$set": bson.M{"isdone": true}})
+		_, modierr := collection.UpdateOne(context.TODO(), bson.M{"tourtime": bson.M{"$eq": data.TourTime}}, bson.M{"$set": bson.M{"isdone": true}})
 		if modierr != nil {
-			log.Println("确认参观失败:" + c.PostForm("TourTime"))
+			log.Println("确认参观失败:" + data.TourTime)
 			return false
 		} else {
-			log.Println("确认参观:" + c.PostForm("TourTime"))
+			log.Println("确认参观:" + data.TourTime)
 			return true
 		}
 	}
@@ -140,6 +155,11 @@ func Done(c *gin.Context) bool {
 
 // 删除预约
 func DoDeleteRes(c *gin.Context) bool {
+	data := Res{}
+	if err := c.ShouldBind(&data); err != nil {
+		c.Error(err)
+		return false
+	}
 	collection := dboption.GetCollection()
 	if c.PostForm("TourTime") == "200000000000" {
 		_, delerr := collection.DeleteMany(context.TODO(), bson.M{})
