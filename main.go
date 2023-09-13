@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -38,9 +37,10 @@ func main() {
 
 	//使用log
 	logutil.LogInit()
+	log := logutil.GetLog()
 	defer func() {
 		if err := logutil.CloseLog(); err != nil {
-			log.Println("日志关闭失败")
+			log.Info().Msg("日志关闭失败")
 		}
 	}()
 
@@ -71,7 +71,7 @@ func main() {
 	r.POST("/insertRes", func(c *gin.Context) {
 		switch DoInsertRes(c) {
 		case false:
-			c.JSON(http.StatusConflict, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"msg":  "插入失败",
 				"code": 400,
 			})
@@ -88,12 +88,14 @@ func main() {
 	r.POST("/deleteRes", func(c *gin.Context) {
 		switch DoDeleteRes(c) {
 		case false:
-			c.JSON(http.StatusConflict, gin.H{
-				"msg": "删除失败",
+			c.JSON(http.StatusOK, gin.H{
+				"msg":  "删除失败",
+				"code": 400,
 			})
 		case true:
 			c.JSON(http.StatusOK, gin.H{
-				"msg": "删除成功",
+				"msg":  "删除成功",
+				"code": 200,
 			})
 
 		}
@@ -104,11 +106,13 @@ func main() {
 	r.POST("/done", func(c *gin.Context) {
 		if Done(c) {
 			c.JSON(http.StatusOK, gin.H{
-				"msg": "成功",
+				"msg":  "成功",
+				"code": 200,
 			})
 		} else {
 			c.JSON(http.StatusOK, gin.H{
-				"msg": "失败",
+				"msg":  "失败",
+				"code": 400,
 			})
 		}
 	})

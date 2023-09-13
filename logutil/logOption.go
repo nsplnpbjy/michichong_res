@@ -9,7 +9,8 @@ import (
 )
 
 var (
-	logFile *os.File // 只保留一个全局变量logFile
+	logFile   *os.File // 只保留一个全局变量logFile
+	returnLog zerolog.Logger
 )
 
 func LogInit() error { // 返回error类型的值，而不是使用全局变量
@@ -23,8 +24,8 @@ func LogInit() error { // 返回error类型的值，而不是使用全局变量
 	if err != nil {
 		return fmt.Errorf("打开日志错误: %w", err) // 返回错误信息，而不是打印或忽略
 	}
-	log := zerolog.New(logFile).With().Timestamp().Logger() // 使用zerolog库创建日志对象
-	log.Info().Msg("logInited")                             // 使用zerolog库记录日志信息
+	returnLog = zerolog.New(logFile).With().Timestamp().Logger() // 使用zerolog库创建日志对象
+	returnLog.Info().Msg("logInited")                            // 使用zerolog库记录日志信息
 	return nil
 }
 
@@ -33,4 +34,8 @@ func CloseLog() error { // 返回error类型的值，而不是布尔值
 		return fmt.Errorf("关闭日志错误: %w", err) // 返回错误信息，而不是忽略或覆盖
 	}
 	return nil
+}
+
+func GetLog() *zerolog.Logger {
+	return &returnLog
 }

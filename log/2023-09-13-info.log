@@ -3,3 +3,14 @@
 {"level":"info","time":1694537398,"message":"logInited"}
 {"level":"info","time":1694537657,"message":"logInited"}
 {"level":"info","time":1694544520,"message":"logInited"}
+{"level":"info","time":1694544744,"message":"logInited"}
+{"level":"info","time":1694602242,"message":"logInited"}
+{"level":"info","time":1694603593,"message":"logInited"}
+{"level":"info","time":1694607939,"message":"logInited"}
+{"level":"info","time":1694607947,"message":"查询：J"}
+{"level":"info","time":1694607967,"message":"插入失败:JINYE  时间已被预约"}
+{"level":"info","time":1694608133,"message":"logInited"}
+{"level":"info","time":1694608138,"message":"插入失败:JINYE  时间已被预约"}
+{"level":"info","time":1694608190,"message":"插入失败:JINYE  时间已被预约"}
+{"level":"info","time":1694608200,"message":"插入成功：JINYE"}
+{"level":"info","time":1694608208,"message":"查询：J"}
