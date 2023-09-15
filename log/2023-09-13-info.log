@@ -14,3 +14,5 @@
 {"level":"info","time":1694608190,"message":"插入失败:JINYE  时间已被预约"}
 {"level":"info","time":1694608200,"message":"插入成功：JINYE"}
 {"level":"info","time":1694608208,"message":"查询：J"}
+{"level":"info","time":1694608318,"message":"logInited"}
+{"level":"info","time":1694608341,"message":"插入成功：JINYE"}
