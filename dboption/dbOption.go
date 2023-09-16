@@ -11,10 +11,11 @@ import (
 
 // 链接数据库
 var (
-	client     *mongo.Client
-	err        error
-	db         *mongo.Database
-	collection *mongo.Collection
+	client        *mongo.Client
+	err           error
+	db            *mongo.Database
+	collection    *mongo.Collection
+	annCollection *mongo.Collection
 )
 
 // 1.建立连接
@@ -31,13 +32,21 @@ func DbInit() *mongo.Collection {
 	//2.选择数据库 my_db
 	db = client.Database("michichong")
 
-	//3.选择表 my_collection
+	//3.选择表 res
 	collection = db.Collection("res")
+
+	//4.选择表 ann
+	annCollection = db.Collection("ann")
+
 	return collection
 }
 
 func GetCollection() *mongo.Collection {
 	return collection
+}
+
+func GetAnnCollection() *mongo.Collection {
+	return annCollection
 }
 
 func GetError() error {
