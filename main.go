@@ -21,6 +21,6 @@ func main() {
 
 	//使用数据库
 	dboption.DbInit()
-	r := controller.ControllerInit()
+	r := controller.ControllerInit(controller.GetEngine())
 	r.Run(":8092") // 监听并在 0.0.0.0:8092 上启动服务
 }

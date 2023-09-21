@@ -30,10 +30,7 @@ func CORS() gin.HandlerFunc {
 	}
 }
 
-func ControllerInit() *gin.Engine {
-	r := gin.Default()
-	r.Use(CORS()) // 使用CORS中间件
-	returner := &r
+func ControllerInit(r *gin.Engine) *gin.Engine {
 	//测试使用
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
@@ -123,5 +120,5 @@ func ControllerInit() *gin.Engine {
 		serv.DelAnn(c)
 	})
 
-	return *returner
+	return r
 }
