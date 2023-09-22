@@ -190,6 +190,7 @@ func DoDeleteRes(c *gin.Context) bool {
 	return true
 }
 
+//设置公告
 func SetAnnounce(c *gin.Context) bool {
 	log := logutil.GetLog()
 	annCollection := dboption.GetAnnCollection()
@@ -205,6 +206,7 @@ func SetAnnounce(c *gin.Context) bool {
 	return true
 }
 
+//获取公告
 func GetAnnounce(c *gin.Context) bool {
 	log := logutil.GetLog()
 	annCollection := dboption.GetAnnCollection()
@@ -237,6 +239,7 @@ func GetAnnounce(c *gin.Context) bool {
 	return true
 }
 
+//删除公告
 func DelAnn(c *gin.Context) bool {
 	log := logutil.GetLog()
 	annCollection := dboption.GetAnnCollection()
