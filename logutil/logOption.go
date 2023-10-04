@@ -22,7 +22,7 @@ func LogInit() error { // 返回error类型的值，而不是使用全局变量
 	}
 	logFile, err := os.OpenFile("./log/"+fileName, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644) // 在文件名前面加上./log/这个相对路径
 	if err != nil {
-		return fmt.Errorf("打开日志错误: %w", err) // 返回错误信息，而不是打印或忽略
+		return fmt.Errorf("打开日志错误: %w", err) 
 	}
 	returnLog = zerolog.New(logFile).With().Timestamp().Logger() // 使用zerolog库创建日志对象
 	returnLog.Info().Msg("logInited")                            // 使用zerolog库记录日志信息
